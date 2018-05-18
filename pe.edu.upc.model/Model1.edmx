@@ -1,0 +1,471 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+      <Schema Namespace="IpadsUPCModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityType Name="bibliotecario">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="codigo" Type="varchar" MaxLength="20" Nullable="false" />
+          <Property Name="nombre" Type="varchar" MaxLength="30" Nullable="false" />
+          <Property Name="apellido" Type="varchar" MaxLength="30" Nullable="false" />
+          <Property Name="telefono" Type="int" Nullable="false" />
+          <Property Name="correo" Type="varchar" MaxLength="30" Nullable="false" />
+        </EntityType>
+        <EntityType Name="ipad">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="codigo" Type="varchar" MaxLength="30" Nullable="false" />
+          <Property Name="modelo" Type="varchar" MaxLength="30" Nullable="false" />
+          <Property Name="serial" Type="varchar" MaxLength="30" Nullable="false" />
+          <Property Name="versionso" Type="varchar" MaxLength="30" Nullable="false" />
+          <Property Name="descripcion" Type="varchar" MaxLength="100" Nullable="false" />
+          <Property Name="estado" Type="varchar" MaxLength="10" Nullable="false" />
+          <Property Name="sede_id" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="movimiento">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="fechaprestamo" Type="datetime" Nullable="false" />
+          <Property Name="fechadevolucion" Type="datetime" Nullable="false" />
+          <Property Name="estado" Type="varchar" MaxLength="20" Nullable="false" />
+          <Property Name="ipad_id" Type="int" Nullable="false" />
+          <Property Name="bibliotecario_id" Type="int" Nullable="false" />
+          <Property Name="usuario_id" Type="int" Nullable="false" />
+          <Property Name="fechadevolucionreal" Type="datetime" />
+        </EntityType>
+        <EntityType Name="multa">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="diasmora" Type="int" Nullable="false" />
+          <Property Name="montopagar" Type="bigint" Nullable="false" />
+          <Property Name="movimiento_id" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="sede">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="nombre" Type="varchar" MaxLength="30" Nullable="false" />
+          <Property Name="direccion" Type="varchar" MaxLength="50" Nullable="false" />
+        </EntityType>
+        <EntityType Name="sysdiagrams">
+          <Key>
+            <PropertyRef Name="diagram_id" />
+          </Key>
+          <Property Name="name" Type="nvarchar" MaxLength="128" Nullable="false" />
+          <Property Name="principal_id" Type="int" Nullable="false" />
+          <Property Name="diagram_id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="version" Type="int" />
+          <Property Name="definition" Type="varbinary(max)" />
+        </EntityType>
+        <EntityType Name="usuario">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="codigo" Type="varchar" MaxLength="20" Nullable="false" />
+          <Property Name="dni" Type="int" Nullable="false" />
+          <Property Name="nombre" Type="varchar" MaxLength="30" Nullable="false" />
+          <Property Name="apellido" Type="varchar" MaxLength="30" Nullable="false" />
+          <Property Name="telefono" Type="int" Nullable="false" />
+          <Property Name="correo" Type="varchar" MaxLength="30" Nullable="false" />
+          <Property Name="sede" Type="varchar" MaxLength="30" />
+          <Property Name="facultad" Type="varchar" MaxLength="30" Nullable="false" />
+        </EntityType>
+        <Association Name="ipad_sede_fk">
+          <End Role="sede" Type="Self.sede" Multiplicity="1" />
+          <End Role="ipad" Type="Self.ipad" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="sede">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="ipad">
+              <PropertyRef Name="sede_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="movimiento_bibliotecario_fk">
+          <End Role="bibliotecario" Type="Self.bibliotecario" Multiplicity="1" />
+          <End Role="movimiento" Type="Self.movimiento" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="bibliotecario">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="movimiento">
+              <PropertyRef Name="bibliotecario_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="movimiento_ipad_fk">
+          <End Role="ipad" Type="Self.ipad" Multiplicity="1" />
+          <End Role="movimiento" Type="Self.movimiento" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="ipad">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="movimiento">
+              <PropertyRef Name="ipad_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="movimiento_usuario_fk">
+          <End Role="usuario" Type="Self.usuario" Multiplicity="1" />
+          <End Role="movimiento" Type="Self.movimiento" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="usuario">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="movimiento">
+              <PropertyRef Name="usuario_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="multa_movimiento_fk">
+          <End Role="movimiento" Type="Self.movimiento" Multiplicity="1" />
+          <End Role="multa" Type="Self.multa" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="movimiento">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="multa">
+              <PropertyRef Name="movimiento_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="IpadsUPCModelStoreContainer">
+          <EntitySet Name="bibliotecario" EntityType="Self.bibliotecario" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="ipad" EntityType="Self.ipad" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="movimiento" EntityType="Self.movimiento" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="multa" EntityType="Self.multa" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="sede" EntityType="Self.sede" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="sysdiagrams" EntityType="Self.sysdiagrams" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="usuario" EntityType="Self.usuario" Schema="dbo" store:Type="Tables" />
+          <AssociationSet Name="ipad_sede_fk" Association="Self.ipad_sede_fk">
+            <End Role="sede" EntitySet="sede" />
+            <End Role="ipad" EntitySet="ipad" />
+          </AssociationSet>
+          <AssociationSet Name="movimiento_bibliotecario_fk" Association="Self.movimiento_bibliotecario_fk">
+            <End Role="bibliotecario" EntitySet="bibliotecario" />
+            <End Role="movimiento" EntitySet="movimiento" />
+          </AssociationSet>
+          <AssociationSet Name="movimiento_ipad_fk" Association="Self.movimiento_ipad_fk">
+            <End Role="ipad" EntitySet="ipad" />
+            <End Role="movimiento" EntitySet="movimiento" />
+          </AssociationSet>
+          <AssociationSet Name="movimiento_usuario_fk" Association="Self.movimiento_usuario_fk">
+            <End Role="usuario" EntitySet="usuario" />
+            <End Role="movimiento" EntitySet="movimiento" />
+          </AssociationSet>
+          <AssociationSet Name="multa_movimiento_fk" Association="Self.multa_movimiento_fk">
+            <End Role="movimiento" EntitySet="movimiento" />
+            <End Role="multa" EntitySet="multa" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema>
+    </edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema Namespace="IpadsUPCModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <EntityType Name="bibliotecario">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="codigo" Type="String" MaxLength="20" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="nombre" Type="String" MaxLength="30" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="apellido" Type="String" MaxLength="30" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="telefono" Type="Int32" Nullable="false" />
+          <Property Name="correo" Type="String" MaxLength="30" FixedLength="false" Unicode="false" Nullable="false" />
+          <NavigationProperty Name="movimiento" Relationship="Self.movimiento_bibliotecario_fk" FromRole="bibliotecario" ToRole="movimiento" />
+        </EntityType>
+        <EntityType Name="ipad">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="codigo" Type="String" MaxLength="30" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="modelo" Type="String" MaxLength="30" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="serial" Type="String" MaxLength="30" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="versionso" Type="String" MaxLength="30" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="descripcion" Type="String" MaxLength="100" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="estado" Type="String" MaxLength="10" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="sede_id" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="sede" Relationship="Self.ipad_sede_fk" FromRole="ipad" ToRole="sede" />
+          <NavigationProperty Name="movimiento" Relationship="Self.movimiento_ipad_fk" FromRole="ipad" ToRole="movimiento" />
+        </EntityType>
+        <EntityType Name="movimiento">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="fechaprestamo" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="fechadevolucion" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="estado" Type="String" MaxLength="20" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="ipad_id" Type="Int32" Nullable="false" />
+          <Property Name="bibliotecario_id" Type="Int32" Nullable="false" />
+          <Property Name="usuario_id" Type="Int32" Nullable="false" />
+          <Property Name="fechadevolucionreal" Type="DateTime" Precision="3" />
+          <NavigationProperty Name="bibliotecario" Relationship="Self.movimiento_bibliotecario_fk" FromRole="movimiento" ToRole="bibliotecario" />
+          <NavigationProperty Name="ipad" Relationship="Self.movimiento_ipad_fk" FromRole="movimiento" ToRole="ipad" />
+          <NavigationProperty Name="usuario" Relationship="Self.movimiento_usuario_fk" FromRole="movimiento" ToRole="usuario" />
+          <NavigationProperty Name="multa" Relationship="Self.multa_movimiento_fk" FromRole="movimiento" ToRole="multa" />
+        </EntityType>
+        <EntityType Name="multa">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="diasmora" Type="Int32" Nullable="false" />
+          <Property Name="montopagar" Type="Int64" Nullable="false" />
+          <Property Name="movimiento_id" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="movimiento" Relationship="Self.multa_movimiento_fk" FromRole="multa" ToRole="movimiento" />
+        </EntityType>
+        <EntityType Name="sede">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="nombre" Type="String" MaxLength="30" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="direccion" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
+          <NavigationProperty Name="ipad" Relationship="Self.ipad_sede_fk" FromRole="sede" ToRole="ipad" />
+        </EntityType>
+        <EntityType Name="sysdiagrams">
+          <Key>
+            <PropertyRef Name="diagram_id" />
+          </Key>
+          <Property Name="name" Type="String" MaxLength="128" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="principal_id" Type="Int32" Nullable="false" />
+          <Property Name="diagram_id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="version" Type="Int32" />
+          <Property Name="definition" Type="Binary" MaxLength="Max" FixedLength="false" />
+        </EntityType>
+        <EntityType Name="usuario">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="codigo" Type="String" MaxLength="20" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="dni" Type="Int32" Nullable="false" />
+          <Property Name="nombre" Type="String" MaxLength="30" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="apellido" Type="String" MaxLength="30" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="telefono" Type="Int32" Nullable="false" />
+          <Property Name="correo" Type="String" MaxLength="30" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="sede" Type="String" MaxLength="30" FixedLength="false" Unicode="false" />
+          <Property Name="facultad" Type="String" MaxLength="30" FixedLength="false" Unicode="false" Nullable="false" />
+          <NavigationProperty Name="movimiento" Relationship="Self.movimiento_usuario_fk" FromRole="usuario" ToRole="movimiento" />
+        </EntityType>
+        <Association Name="movimiento_bibliotecario_fk">
+          <End Role="bibliotecario" Type="Self.bibliotecario" Multiplicity="1" />
+          <End Role="movimiento" Type="Self.movimiento" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="bibliotecario">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="movimiento">
+              <PropertyRef Name="bibliotecario_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="ipad_sede_fk">
+          <End Role="sede" Type="Self.sede" Multiplicity="1" />
+          <End Role="ipad" Type="Self.ipad" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="sede">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="ipad">
+              <PropertyRef Name="sede_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="movimiento_ipad_fk">
+          <End Role="ipad" Type="Self.ipad" Multiplicity="1" />
+          <End Role="movimiento" Type="Self.movimiento" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="ipad">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="movimiento">
+              <PropertyRef Name="ipad_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="movimiento_usuario_fk">
+          <End Role="usuario" Type="Self.usuario" Multiplicity="1" />
+          <End Role="movimiento" Type="Self.movimiento" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="usuario">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="movimiento">
+              <PropertyRef Name="usuario_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="multa_movimiento_fk">
+          <End Role="movimiento" Type="Self.movimiento" Multiplicity="1" />
+          <End Role="multa" Type="Self.multa" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="movimiento">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="multa">
+              <PropertyRef Name="movimiento_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="IpadsUPCEntities" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="bibliotecario" EntityType="Self.bibliotecario" />
+          <EntitySet Name="ipad" EntityType="Self.ipad" />
+          <EntitySet Name="movimiento" EntityType="Self.movimiento" />
+          <EntitySet Name="multa" EntityType="Self.multa" />
+          <EntitySet Name="sede" EntityType="Self.sede" />
+          <EntitySet Name="sysdiagrams" EntityType="Self.sysdiagrams" />
+          <EntitySet Name="usuario" EntityType="Self.usuario" />
+          <AssociationSet Name="movimiento_bibliotecario_fk" Association="Self.movimiento_bibliotecario_fk">
+            <End Role="bibliotecario" EntitySet="bibliotecario" />
+            <End Role="movimiento" EntitySet="movimiento" />
+          </AssociationSet>
+          <AssociationSet Name="ipad_sede_fk" Association="Self.ipad_sede_fk">
+            <End Role="sede" EntitySet="sede" />
+            <End Role="ipad" EntitySet="ipad" />
+          </AssociationSet>
+          <AssociationSet Name="movimiento_ipad_fk" Association="Self.movimiento_ipad_fk">
+            <End Role="ipad" EntitySet="ipad" />
+            <End Role="movimiento" EntitySet="movimiento" />
+          </AssociationSet>
+          <AssociationSet Name="movimiento_usuario_fk" Association="Self.movimiento_usuario_fk">
+            <End Role="usuario" EntitySet="usuario" />
+            <End Role="movimiento" EntitySet="movimiento" />
+          </AssociationSet>
+          <AssociationSet Name="multa_movimiento_fk" Association="Self.multa_movimiento_fk">
+            <End Role="movimiento" EntitySet="movimiento" />
+            <End Role="multa" EntitySet="multa" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+      <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+        <EntityContainerMapping StorageEntityContainer="IpadsUPCModelStoreContainer" CdmEntityContainer="IpadsUPCEntities">
+          <EntitySetMapping Name="bibliotecario">
+            <EntityTypeMapping TypeName="IpadsUPCModel.bibliotecario">
+              <MappingFragment StoreEntitySet="bibliotecario">
+                <ScalarProperty Name="id" ColumnName="id" />
+                <ScalarProperty Name="codigo" ColumnName="codigo" />
+                <ScalarProperty Name="nombre" ColumnName="nombre" />
+                <ScalarProperty Name="apellido" ColumnName="apellido" />
+                <ScalarProperty Name="telefono" ColumnName="telefono" />
+                <ScalarProperty Name="correo" ColumnName="correo" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="ipad">
+            <EntityTypeMapping TypeName="IpadsUPCModel.ipad">
+              <MappingFragment StoreEntitySet="ipad">
+                <ScalarProperty Name="id" ColumnName="id" />
+                <ScalarProperty Name="codigo" ColumnName="codigo" />
+                <ScalarProperty Name="modelo" ColumnName="modelo" />
+                <ScalarProperty Name="serial" ColumnName="serial" />
+                <ScalarProperty Name="versionso" ColumnName="versionso" />
+                <ScalarProperty Name="descripcion" ColumnName="descripcion" />
+                <ScalarProperty Name="estado" ColumnName="estado" />
+                <ScalarProperty Name="sede_id" ColumnName="sede_id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="movimiento">
+            <EntityTypeMapping TypeName="IpadsUPCModel.movimiento">
+              <MappingFragment StoreEntitySet="movimiento">
+                <ScalarProperty Name="id" ColumnName="id" />
+                <ScalarProperty Name="fechaprestamo" ColumnName="fechaprestamo" />
+                <ScalarProperty Name="fechadevolucion" ColumnName="fechadevolucion" />
+                <ScalarProperty Name="estado" ColumnName="estado" />
+                <ScalarProperty Name="ipad_id" ColumnName="ipad_id" />
+                <ScalarProperty Name="bibliotecario_id" ColumnName="bibliotecario_id" />
+                <ScalarProperty Name="usuario_id" ColumnName="usuario_id" />
+                <ScalarProperty Name="fechadevolucionreal" ColumnName="fechadevolucionreal" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="multa">
+            <EntityTypeMapping TypeName="IpadsUPCModel.multa">
+              <MappingFragment StoreEntitySet="multa">
+                <ScalarProperty Name="id" ColumnName="id" />
+                <ScalarProperty Name="diasmora" ColumnName="diasmora" />
+                <ScalarProperty Name="montopagar" ColumnName="montopagar" />
+                <ScalarProperty Name="movimiento_id" ColumnName="movimiento_id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="sede">
+            <EntityTypeMapping TypeName="IpadsUPCModel.sede">
+              <MappingFragment StoreEntitySet="sede">
+                <ScalarProperty Name="id" ColumnName="id" />
+                <ScalarProperty Name="nombre" ColumnName="nombre" />
+                <ScalarProperty Name="direccion" ColumnName="direccion" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="sysdiagrams">
+            <EntityTypeMapping TypeName="IpadsUPCModel.sysdiagrams">
+              <MappingFragment StoreEntitySet="sysdiagrams">
+                <ScalarProperty Name="name" ColumnName="name" />
+                <ScalarProperty Name="principal_id" ColumnName="principal_id" />
+                <ScalarProperty Name="diagram_id" ColumnName="diagram_id" />
+                <ScalarProperty Name="version" ColumnName="version" />
+                <ScalarProperty Name="definition" ColumnName="definition" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="usuario">
+            <EntityTypeMapping TypeName="IpadsUPCModel.usuario">
+              <MappingFragment StoreEntitySet="usuario">
+                <ScalarProperty Name="id" ColumnName="id" />
+                <ScalarProperty Name="codigo" ColumnName="codigo" />
+                <ScalarProperty Name="dni" ColumnName="dni" />
+                <ScalarProperty Name="nombre" ColumnName="nombre" />
+                <ScalarProperty Name="apellido" ColumnName="apellido" />
+                <ScalarProperty Name="telefono" ColumnName="telefono" />
+                <ScalarProperty Name="correo" ColumnName="correo" />
+                <ScalarProperty Name="sede" ColumnName="sede" />
+                <ScalarProperty Name="facultad" ColumnName="facultad" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+        </EntityContainerMapping>
+      </Mapping>
+    </edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </Connection>
+    <Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="false" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="true" />
+        <DesignerProperty Name="UseLegacyProvider" Value="false" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="Ninguno" />
+      </DesignerInfoPropertySet>
+    </Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <Diagrams></Diagrams>
+  </Designer>
+</edmx:Edmx>
