@@ -33,7 +33,7 @@ namespace pe.edu.upc.view
         {
             gvMovimientoUs.DataSource = movimientoService.ListarMovimientos();
         }
-        // xdd
+        // xddddddd
         private void btnRegistrarMovimiento_Click(object sender, EventArgs e)
         {
             var ipad = ipadService.ObtenerDisponible();
